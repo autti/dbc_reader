@@ -1,0 +1,4 @@
+<?xml version="1.0"?>
+<launch>
+    <node pkg="dbc_reader" type="dbc_reader.py" name="dbc_reader" output="screen"></node>    
+</launch>
