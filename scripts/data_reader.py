@@ -3,24 +3,21 @@
 import cantools
 import rospy
 import can
-import os
 
 from pprint import pprint
 from std_msgs.msg import Float32, String
+from common import DATA_FILE, INTERFACE, CHANNEL
 
 # can configuration
 
-can.rc['interface'] = 'socketcan'
-can.rc['channel'] = 'hs1'
-
-# Constants
-FILEPATH = os.path.dirname(os.path.realpath(__file__)) + '/'
+can.rc['interface'] = INTERFACE
+can.rc['channel'] = CHANNEL
 
 string_messages = set(['Cruise_State', 'Lkas_Action', 'Lkas_Alert', 'LaActAvail_D_Actl', 'Lines_Hud'])
 
-class DBCReader:
+class DataReader:
     def __init__(self, dbc_file):
-        rospy.init_node('DBCReader', anonymous=True)
+        rospy.init_node('DataReader', anonymous=True)
         self._dbc = cantools.db.load_file(dbc_file)
         self._can_bus = can.interface.Bus()
         self._publishers = {}
@@ -40,11 +37,11 @@ class DBCReader:
             for key in output:
                 signal_name = key
                 value_output = output[key]
-                # print value_output, type(value_output)
+                # print key, value_output
                 full_name = message_name + "/" + signal_name
                 self._publishers[full_name].publish(value_output)
 
 if __name__ == '__main__':
-    reader = DBCReader(FILEPATH + '../dbc/ford_fusion_2018.dbc')
+    reader = DataReader(DATA_FILE)
     while not rospy.is_shutdown():
         reader.recv_message()

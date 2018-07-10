@@ -1,0 +1,4 @@
+<?xml version="1.0"?>
+<launch>
+    <node pkg="dbc_reader" type="radar_reader.py" name="radar_reader" output="screen"></node>    
+</launch>
